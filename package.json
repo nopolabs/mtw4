@@ -1,0 +1,16 @@
+{
+  "name": "mtw4",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "eleventy --serve",
+    "build": "eleventy"
+  },
+  "keywords": [],
+  "author": "Dan Revel <danrevel@gmail.com> (https://noco.ws/)",
+  "license": "MIT",
+  "description": "",
+  "devDependencies": {
+    "@11ty/eleventy": "^3.1.2"
+  }
+}
