@@ -183,4 +183,3 @@ KV entries expire after 30 days.
 ## Going live checklist
 
 - [ ] Enable Stripe confirmation emails in Stripe dashboard
-- [ ] Route mtw.lol/checkout through to the Worker via Cloudflare
