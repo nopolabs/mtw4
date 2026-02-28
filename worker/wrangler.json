@@ -1,0 +1,16 @@
+{
+	"name": "mtw4-worker",
+	"main": "src/index.js",
+	"compatibility_date": "2026-02-26",
+	"compatibility_flags": ["nodejs_compat"],
+	"observability": {
+		"enabled": true
+	},
+	"kv_namespaces": [
+		{
+			"binding": "ORDERS",
+			"id": "5edaa727c5c24bcd9dbd63231a49897c",
+			"preview_id": "e264a0d54ea04ae39de8853a690452be"
+		}
+	]
+}

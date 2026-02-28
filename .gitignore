@@ -1,1 +1,4 @@
-node_modules/\n_site/
+node_modules/
+_site/
+worker/node_modules/
+worker/.dev.vars
