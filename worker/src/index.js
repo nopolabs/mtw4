@@ -60,10 +60,10 @@ async function handleCheckout(request, env, url) {
 		metadata: {
 			slug: slug,
 		},
-		success_url: `https://mtw4-worker.danrevel.workers.dev/success`,
-		cancel_url: `https://mtw4-worker.danrevel.workers.dev/`,
+		success_url: `https://mtw.lol/success`,
+		cancel_url: `https://mtw.lol/`,
 	});
-	
+
 	return Response.redirect(session.url, 303);
 }
 
