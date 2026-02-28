@@ -14,7 +14,7 @@ layout: layout.njk
         <h2>{{ product.name }}</h2>
         <p>${{ product.price }}</p>
       </div>
-      <a href="/checkout?slug={{ product.slug }}" class="buy-button">Buy Now</a>
+      <a href="https://mtw4-worker.danrevel.workers.dev/checkout?slug={{ product.slug }}" class="buy-button">Buy Now</a>
     </div>
   {% endfor %}
 </div>

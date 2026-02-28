@@ -54,9 +54,22 @@ async function handleCheckout(request, env, url) {
 			quantity: 1,
 		}],
 		mode: 'payment',
-		shipping_address_collection: {
-			allowed_countries: ['US', 'CA', 'GB', 'AU'],
-		},
+		shipping_options: [
+			{
+				shipping_rate_data: {
+					type: 'fixed_amount',
+					fixed_amount: {
+						amount: 449,
+						currency: 'usd',
+					},
+					display_name: 'Standard Shipping',
+					delivery_estimate: {
+						minimum: { unit: 'business_day', value: 5 },
+						maximum: { unit: 'business_day', value: 10 },
+					},
+				},
+			},
+		],
 		metadata: {
 			slug: slug,
 		},
