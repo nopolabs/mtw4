@@ -182,10 +182,5 @@ KV entries expire after 30 days.
 
 ## Going live checklist
 
-- [ ] Switch Stripe from sandbox to live mode
-- [ ] Update `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET` with live mode values
-- [ ] Register production webhook endpoint in Stripe live mode dashboard
-- [ ] Uncomment Printful order confirm call in `worker/src/index.js`
 - [ ] Enable Stripe confirmation emails in Stripe dashboard
-- [ ] Test with a real card and small amount
-- [ ] Cancel Squarespace subscription
+- [ ] Route mtw.lol/checkout through to the Worker via Cloudflare

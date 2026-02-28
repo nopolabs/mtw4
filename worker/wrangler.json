@@ -12,5 +12,15 @@
 			"id": "5edaa727c5c24bcd9dbd63231a49897c",
 			"preview_id": "e264a0d54ea04ae39de8853a690452be"
 		}
+	],
+	"routes": [
+		{
+			"pattern": "mtw.lol/checkout*",
+			"zone_name": "mtw.lol"
+		},
+		{
+			"pattern": "mtw.lol/webhook*",
+			"zone_name": "mtw.lol"
+		}
 	]
 }
