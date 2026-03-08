@@ -106,9 +106,7 @@ Edit `src/_data/products.json`. Each product needs:
   "name": "Product Name",
   "price": "27.00",
   "slug": "product-slug",
-  "image": "/images/product-image.jpg",
-  "shopify_id": "",
-  "shopify_node": ""
+  "image": "/images/product-image.jpg"
 }
 ```
 

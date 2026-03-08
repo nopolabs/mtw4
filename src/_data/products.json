@@ -3,16 +3,12 @@
     "name": "Retired",
     "price": "27.00",
     "slug": "retired-cap",
-    "image": "/images/retired-cap.jpg",
-    "shopify_id": "9289715450102",
-    "shopify_node": "product-component-1772129079026"
+    "image": "/images/retired-cap.jpg"
   },
   {
     "name": "Weekend Warrior",
     "price": "27.00",
     "slug": "weekend-warrior-cap",
-    "image": "/images/weekend-warrior.jpg",
-    "shopify_id": "9289716039926",
-    "shopify_node": "product-component-1772129216337"
+    "image": "/images/weekend-warrior.jpg"
   }
 ]
