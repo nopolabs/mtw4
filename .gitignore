@@ -2,3 +2,4 @@ node_modules/
 _site/
 worker/node_modules/
 worker/.dev.vars
+.claude/
