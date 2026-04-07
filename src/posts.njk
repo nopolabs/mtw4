@@ -1,0 +1,20 @@
+---
+layout: layout.njk
+title: Posts
+---
+<div class="page-content">
+  <h1>Posts</h1>
+  <ul class="post-list">
+    {%- for post in collections.posts | reverse -%}
+    <li class="post-list-item">
+      <a href="{{ post.url }}">
+        <span class="post-list-title">{{ post.data.title }}</span>
+        <time class="post-list-date" datetime="{{ post.date | isoDate }}">{{ post.date | readableDate }}</time>
+      </a>
+      {%- if post.data.description -%}
+      <p class="post-list-desc">{{ post.data.description }}</p>
+      {%- endif -%}
+    </li>
+    {%- endfor -%}
+  </ul>
+</div>
