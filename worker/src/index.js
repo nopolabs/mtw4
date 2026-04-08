@@ -73,8 +73,8 @@ async function handleCheckout(request, env, url) {
 		metadata: {
 			slug: slug,
 		},
-		success_url: `https://mtw.lol/success`,
-		cancel_url: `https://mtw.lol/`,
+		success_url: `https://mastertimewaster.com/success`,
+		cancel_url: `https://mastertimewaster.com/`,
 	});
 
 	return Response.redirect(session.url, 303);
