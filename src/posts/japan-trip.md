@@ -4,16 +4,13 @@ date: 2026-03-15
 description: Notes and photos from a recent trip to Japan.
 ---
 
-Add your post content here. Markdown is fully supported — headings, images, links, lists, etc.
-
-## Getting There
-
-...
-
 ## Tokyo
 
-...
+![Ueno Park](/images/Japan-IMG_0492.jpeg)
+![Ueno Park](/images/Japan-IMG_0583.jpeg)
 
-## Kyoto
 
-...
+## Kanazawa
+
+![Kanazawa Castle](/images/Japan-IMG_0683.jpeg)
+

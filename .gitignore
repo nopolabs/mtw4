@@ -3,3 +3,4 @@ _site/
 worker/node_modules/
 worker/.dev.vars
 .claude/
+.scratch/
