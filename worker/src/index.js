@@ -120,12 +120,9 @@ async function handleWebhook(request, env, ctx) {
 }
 
 async function createPrintfulOrder(session, env) {
-	const stripe = new Stripe(env.STRIPE_SECRET_KEY);
-	const fullSession = await stripe.checkout.sessions.retrieve(session.id);
-
-	const slug = fullSession.metadata.slug;
+	const slug = session.metadata.slug;
 	const product = PRODUCTS[slug];
-	const shipping = fullSession.shipping_details;
+	const shipping = session.collected_information.shipping_details;
 
 	const order = {
 		recipient: {
@@ -136,7 +133,7 @@ async function createPrintfulOrder(session, env) {
 			state_code: shipping.address.state,
 			country_code: shipping.address.country,
 			zip: shipping.address.postal_code,
-			email: fullSession.customer_details.email,
+			email: session.customer_details.email,
 		},
 		items: [{
 			sync_variant_id: product.printful_variant_id,
