@@ -15,12 +15,12 @@
 	],
 	"routes": [
 		{
-			"pattern": "mtw.lol/checkout*",
-			"zone_name": "mtw.lol"
+			"pattern": "mastertimewaster.com/checkout*",
+			"zone_name": "mastertimewaster.com"
 		},
 		{
-			"pattern": "mtw.lol/webhook*",
-			"zone_name": "mtw.lol"
+			"pattern": "mastertimewaster.com/webhook*",
+			"zone_name": "mastertimewaster.com"
 		}
 	]
 }

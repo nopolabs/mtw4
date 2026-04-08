@@ -2,7 +2,7 @@
 
 A static ecommerce site built with Eleventy and deployed to Cloudflare Pages, using Stripe for payment processing and a Cloudflare Worker for the checkout and fulfillment backend. Printful is integrated directly via API for print-on-demand fulfillment. No Shopify.
 
-**Live site:** https://mtw.lol
+**Live site:** https://mastertimewaster.com
 
 ## Stack
 
