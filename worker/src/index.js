@@ -55,7 +55,7 @@ async function handleCheckout(request, env, url) {
 		}],
 		mode: 'payment',
 		shipping_address_collection: {
-			allowed_countries: ['US', 'CA', 'GB', 'AU', 'NZ'],
+			allowed_countries: ['US'],
 		},
 		shipping_options: [
 			{
