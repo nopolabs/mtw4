@@ -54,6 +54,9 @@ async function handleCheckout(request, env, url) {
 			quantity: 1,
 		}],
 		mode: 'payment',
+		shipping_address_collection: {
+			allowed_countries: ['US'],
+		},
 		shipping_options: [
 			{
 				shipping_rate_data: {
@@ -117,9 +120,12 @@ async function handleWebhook(request, env, ctx) {
 }
 
 async function createPrintfulOrder(session, env) {
-	const slug = session.metadata.slug;
+	const stripe = new Stripe(env.STRIPE_SECRET_KEY);
+	const fullSession = await stripe.checkout.sessions.retrieve(session.id);
+
+	const slug = fullSession.metadata.slug;
 	const product = PRODUCTS[slug];
-	const shipping = session.collected_information.shipping_details;
+	const shipping = fullSession.shipping_details;
 
 	const order = {
 		recipient: {
@@ -130,7 +136,7 @@ async function createPrintfulOrder(session, env) {
 			state_code: shipping.address.state,
 			country_code: shipping.address.country,
 			zip: shipping.address.postal_code,
-			email: session.customer_details.email,
+			email: fullSession.customer_details.email,
 		},
 		items: [{
 			sync_variant_id: product.printful_variant_id,
