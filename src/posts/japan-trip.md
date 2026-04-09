@@ -19,4 +19,5 @@ description: Photos from a trip to Japan (March 17-31 2026).
 ![Maintenance Hole Cover](/images/Japan-IMG_0393.jpeg)
 
 <p>The translation is mundane.</p>
+
 ![Maintenance Hole Cover](/images/Japan-IMG_0393-translated.jpeg)
