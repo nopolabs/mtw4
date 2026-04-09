@@ -1,7 +1,7 @@
 ---
 title: Japan Trip
-date: 2026-03-17
-description: Photos from a trip to Japan (3/17-31).
+date: 2026-04-08
+description: Photos from a trip to Japan (March 17-31 2026).
 ---
 
 ## Tokyo
