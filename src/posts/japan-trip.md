@@ -17,3 +17,6 @@ description: Photos from a trip to Japan (3/17-31).
 
 ![Maintenance Hole Cover](/images/Japan-IMG_0272.jpeg)
 ![Maintenance Hole Cover](/images/Japan-IMG_0393.jpeg)
+
+<p>The translation is mundane.</p>
+![Maintenance Hole Cover](/images/Japan-IMG_0393-translated.jpeg)
