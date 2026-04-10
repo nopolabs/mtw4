@@ -16,7 +16,11 @@ layout: layout.njk
         <h2>{{ product.name }}</h2>
         <p>${{ product.price }}</p>
       </div>
-      <a href="/checkout?slug={{ product.slug }}" class="buy-button">Buy Now</a>
+      <button class="buy-button"
+        data-slug="{{ product.slug }}"
+        data-name="{{ product.name }}"
+        data-price="{{ product.price }}"
+        data-image="{{ product.image }}">Add to Cart</button>
     </div>
   {% endfor %}
 </div>

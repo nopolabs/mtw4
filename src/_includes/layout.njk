@@ -18,13 +18,185 @@
         <a href="/about">About</a>
         <a href="/contact">Contact</a>
       </div>
+      <button class="cart-icon-btn" id="cart-open" aria-label="Open cart">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+        <span class="cart-badge" id="cart-badge" style="display:none">0</span>
+      </button>
     </div>
   </nav>
+
   <main>
     {{ content | safe }}
   </main>
+
   <footer>
     <p>© MasterTimeWaster</p>
   </footer>
+
+  <!-- Cart overlay + drawer -->
+  <div class="cart-overlay" id="cart-overlay"></div>
+  <div class="cart-drawer" id="cart-drawer" aria-modal="true" role="dialog" aria-label="Shopping cart">
+    <div class="cart-header">
+      <h2>Cart</h2>
+      <button class="cart-close-btn" id="cart-close" aria-label="Close cart">✕</button>
+    </div>
+    <div class="cart-items" id="cart-items">
+      <p class="cart-empty">Your cart is empty.</p>
+    </div>
+    <div class="cart-footer" id="cart-footer" style="display:none">
+      <div class="cart-total-row">
+        <span>Total</span>
+        <strong id="cart-total">$0.00</strong>
+      </div>
+      <p class="cart-shipping-note">Shipping calculated at checkout</p>
+      <button class="checkout-btn" id="cart-checkout">Checkout</button>
+    </div>
+  </div>
+
+  <script>
+    const Cart = {
+      get() {
+        try { return JSON.parse(localStorage.getItem('mtw_cart')) || []; }
+        catch { return []; }
+      },
+      save(items) {
+        localStorage.setItem('mtw_cart', JSON.stringify(items));
+      },
+      add(slug, name, price, image) {
+        const items = this.get();
+        const existing = items.find(i => i.slug === slug);
+        if (existing) {
+          existing.qty++;
+        } else {
+          items.push({ slug, name, price, image, qty: 1 });
+        }
+        this.save(items);
+        this.refresh();
+        this.open();
+      },
+      remove(slug) {
+        this.save(this.get().filter(i => i.slug !== slug));
+        this.refresh();
+      },
+      changeQty(slug, delta) {
+        const items = this.get();
+        const item = items.find(i => i.slug === slug);
+        if (item) {
+          item.qty += delta;
+          if (item.qty <= 0) {
+            this.save(items.filter(i => i.slug !== slug));
+          } else {
+            this.save(items);
+          }
+        }
+        this.refresh();
+      },
+      count() {
+        return this.get().reduce((sum, i) => sum + i.qty, 0);
+      },
+      total() {
+        return this.get().reduce((sum, i) => sum + parseFloat(i.price) * i.qty, 0);
+      },
+      open() {
+        document.body.classList.add('cart-open');
+      },
+      close() {
+        document.body.classList.remove('cart-open');
+      },
+      refresh() {
+        const count = this.count();
+        const badge = document.getElementById('cart-badge');
+        if (badge) {
+          badge.textContent = count;
+          badge.style.display = count > 0 ? 'flex' : 'none';
+        }
+        const total = document.getElementById('cart-total');
+        if (total) total.textContent = '$' + this.total().toFixed(2);
+        const footer = document.getElementById('cart-footer');
+        if (footer) footer.style.display = count > 0 ? 'block' : 'none';
+        this.render();
+      },
+      render() {
+        const el = document.getElementById('cart-items');
+        if (!el) return;
+        const items = this.get();
+        if (items.length === 0) {
+          el.innerHTML = '<p class="cart-empty">Your cart is empty.</p>';
+          return;
+        }
+        el.innerHTML = items.map(item => `
+          <div class="cart-item">
+            <img src="${item.image}" alt="${item.name}">
+            <div class="cart-item-info">
+              <div class="cart-item-name">${item.name}</div>
+              <div class="cart-item-price">$${(parseFloat(item.price) * item.qty).toFixed(2)}</div>
+              <div class="cart-item-controls">
+                <button class="qty-btn" onclick="Cart.changeQty('${item.slug}', -1)" aria-label="Decrease quantity">−</button>
+                <span class="qty-val">${item.qty}</span>
+                <button class="qty-btn" onclick="Cart.changeQty('${item.slug}', 1)" aria-label="Increase quantity">+</button>
+                <button class="remove-btn" onclick="Cart.remove('${item.slug}')">Remove</button>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      },
+      async checkout() {
+        const items = this.get();
+        if (items.length === 0) return;
+        const btn = document.getElementById('cart-checkout');
+        btn.textContent = 'Processing…';
+        btn.disabled = true;
+        try {
+          const res = await fetch('/checkout', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ items: items.map(i => ({ slug: i.slug, qty: i.qty })) }),
+          });
+          const data = await res.json();
+          if (data.url) {
+            window.location.href = data.url;
+          } else {
+            throw new Error('No URL returned');
+          }
+        } catch (err) {
+          alert('Checkout failed. Please try again.');
+          btn.textContent = 'Checkout';
+          btn.disabled = false;
+        }
+      },
+      clear() {
+        localStorage.removeItem('mtw_cart');
+        this.refresh();
+      },
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      Cart.refresh();
+
+      document.getElementById('cart-open')?.addEventListener('click', () => Cart.open());
+      document.getElementById('cart-close')?.addEventListener('click', () => Cart.close());
+      document.getElementById('cart-overlay')?.addEventListener('click', () => Cart.close());
+      document.getElementById('cart-checkout')?.addEventListener('click', () => Cart.checkout());
+
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') Cart.close();
+      });
+
+      document.querySelectorAll('.buy-button').forEach(btn => {
+        btn.addEventListener('click', () => {
+          Cart.add(btn.dataset.slug, btn.dataset.name, btn.dataset.price, btn.dataset.image);
+        });
+      });
+
+      // Clear cart on success page
+      if (window.location.pathname === '/success') {
+        Cart.clear();
+      }
+    });
+  </script>
 </body>
 </html>
