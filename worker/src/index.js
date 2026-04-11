@@ -20,70 +20,19 @@ const PRODUCTS = {
 
 export default {
 	async fetch(request, env, ctx) {
-		const url = new URL(request.url);
+		const { pathname } = new URL(request.url);
 
-		if (request.method === 'GET' && url.pathname === '/checkout') {
-			return handleCheckout(request, env, url);
-		}
-
-		if (request.method === 'POST' && url.pathname === '/checkout') {
+		if (request.method === 'POST' && pathname === '/checkout') {
 			return handleCartCheckout(request, env);
 		}
 
-		if (request.method === 'POST' && url.pathname === '/webhook') {
+		if (request.method === 'POST' && pathname === '/webhook') {
 			return handleWebhook(request, env, ctx);
 		}
 
 		return new Response('Not found', { status: 404 });
 	}
 };
-
-async function handleCheckout(request, env, url) {
-	const slug = url.searchParams.get('slug');
-	const product = PRODUCTS[slug];
-
-	if (!product) {
-		return new Response('Product not found', { status: 404 });
-	}
-
-	const stripe = new Stripe(env.STRIPE_SECRET_KEY);
-
-	const session = await stripe.checkout.sessions.create({
-		payment_method_types: ['card'],
-		line_items: [{
-			price_data: {
-				currency: 'usd',
-				product_data: { name: product.name },
-				unit_amount: product.price,
-			},
-			quantity: 1,
-		}],
-		mode: 'payment',
-		shipping_address_collection: {
-			allowed_countries: ['US'],
-		},
-		shipping_options: [
-			{
-				shipping_rate_data: {
-					type: 'fixed_amount',
-					fixed_amount: {
-						amount: SHIPPING.base_rate,
-						currency: 'usd',
-					},
-					display_name: SHIPPING.display_name,
-					delivery_estimate: SHIPPING.delivery_estimate,
-				},
-			},
-		],
-		metadata: {
-			slug: slug,
-		},
-		success_url: `https://mastertimewaster.com/success`,
-		cancel_url: `https://mastertimewaster.com/`,
-	});
-
-	return Response.redirect(session.url, 303);
-}
 
 async function handleCartCheckout(request, env) {
 	let body;
@@ -190,10 +139,7 @@ async function handleWebhook(request, env, ctx) {
 async function createPrintfulOrder(session, env) {
 	const shipping = session.collected_information.shipping_details;
 
-	// Support both cart (items array) and legacy (single slug) metadata formats
-	const orderItems = session.metadata.items
-		? JSON.parse(session.metadata.items)
-		: [{ slug: session.metadata.slug, qty: 1 }];
+	const orderItems = JSON.parse(session.metadata.items);
 
 	const subtotal = orderItems.reduce((sum, item) => {
 		const product = PRODUCTS[item.slug];
