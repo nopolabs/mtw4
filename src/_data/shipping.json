@@ -1,0 +1,9 @@
+{
+  "base_rate": 449,
+  "per_additional_item": 220,
+  "display_name": "Standard Shipping",
+  "delivery_estimate": {
+    "minimum": { "unit": "business_day", "value": 5 },
+    "maximum": { "unit": "business_day", "value": 10 }
+  }
+}

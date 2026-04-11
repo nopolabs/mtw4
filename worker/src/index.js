@@ -1,4 +1,5 @@
 import Stripe from 'stripe';
+import SHIPPING from '../../src/_data/shipping.json';
 
 // MasterTimeWaster API
 const PRINTFUL_STORE_ID = 17783389;
@@ -66,14 +67,11 @@ async function handleCheckout(request, env, url) {
 				shipping_rate_data: {
 					type: 'fixed_amount',
 					fixed_amount: {
-						amount: 449,
+						amount: SHIPPING.base_rate,
 						currency: 'usd',
 					},
-					display_name: 'Standard Shipping',
-					delivery_estimate: {
-						minimum: { unit: 'business_day', value: 5 },
-						maximum: { unit: 'business_day', value: 10 },
-					},
+					display_name: SHIPPING.display_name,
+					delivery_estimate: SHIPPING.delivery_estimate,
 				},
 			},
 		],
@@ -121,7 +119,7 @@ async function handleCartCheckout(request, env) {
 	});
 
 	const totalQty = items.reduce((sum, i) => sum + i.qty, 0);
-	const shippingAmount = 449 + Math.max(0, totalQty - 1) * 220;
+	const shippingAmount = SHIPPING.base_rate + Math.max(0, totalQty - 1) * SHIPPING.per_additional_item;
 
 	const session = await stripe.checkout.sessions.create({
 		payment_method_types: ['card'],
@@ -138,11 +136,8 @@ async function handleCartCheckout(request, env) {
 						amount: shippingAmount,
 						currency: 'usd',
 					},
-					display_name: 'Standard Shipping',
-					delivery_estimate: {
-						minimum: { unit: 'business_day', value: 5 },
-						maximum: { unit: 'business_day', value: 10 },
-					},
+					display_name: SHIPPING.display_name,
+					delivery_estimate: SHIPPING.delivery_estimate,
 				},
 			},
 		],
