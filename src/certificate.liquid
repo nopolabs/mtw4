@@ -43,6 +43,7 @@ layout: layout.liquid
   <!-- Step 3: Success -->
   <section id="cert-success-section" hidden>
     <p class="cert-success-msg" id="cert-success-msg"></p>
+    <button type="button" id="cert-another-btn" class="buy-button buy-button--outline">Send another certificate</button>
   </section>
 </div>
 
@@ -153,6 +154,7 @@ layout: layout.liquid
   var formError      = document.getElementById('cert-form-error');
   var previewError   = document.getElementById('cert-preview-error');
   var successMsg     = document.getElementById('cert-success-msg');
+  var anotherBtn     = document.getElementById('cert-another-btn');
 
   function showSection(section) {
     formSection.hidden    = section !== 'form';
@@ -193,6 +195,14 @@ layout: layout.liquid
 
   editBtn.addEventListener('click', function () {
     previewError.hidden = true;
+    showSection('form');
+  });
+
+  anotherBtn.addEventListener('click', function () {
+    form.reset();
+    formError.hidden = true;
+    sendBtn.disabled = false;
+    sendBtn.textContent = 'Send Certificate';
     showSection('form');
   });
 
