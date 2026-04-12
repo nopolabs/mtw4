@@ -1,0 +1,231 @@
+---
+title: Certificate
+layout: layout.liquid
+---
+
+<div class="page-content cert-page">
+  <h1>Issue a Certificate</h1>
+  <p>Recognize a true master. Fill in the details below, preview the certificate, then send it directly to their inbox.</p>
+
+  <!-- Step 1: Form -->
+  <section id="cert-form-section">
+    <form id="cert-form" class="cert-form" novalidate>
+      <div class="cert-field">
+        <label for="cert-name">Recipient name <span class="cert-required">*</span></label>
+        <input type="text" id="cert-name" name="name" maxlength="100" required autocomplete="name" placeholder="Full name">
+      </div>
+      <div class="cert-field">
+        <label for="cert-email">Recipient email <span class="cert-required">*</span></label>
+        <input type="email" id="cert-email" name="email" required autocomplete="email" placeholder="their@email.com">
+      </div>
+      <div class="cert-field">
+        <label for="cert-achievement">Achievement <span class="cert-optional">(optional)</span></label>
+        <input type="text" id="cert-achievement" name="achievement" maxlength="200"
+          placeholder="In recognition of spectacular, world-class, unapologetic wasting of time">
+      </div>
+      <p id="cert-form-error" class="cert-error" hidden></p>
+      <button type="submit" class="buy-button">Preview Certificate</button>
+    </form>
+  </section>
+
+  <!-- Step 2: Preview -->
+  <section id="cert-preview-section" hidden>
+    <div class="cert-preview-img-wrap">
+      <img id="cert-preview-img" alt="Certificate preview" class="cert-preview-img">
+    </div>
+    <p id="cert-preview-error" class="cert-error" hidden></p>
+    <div class="cert-preview-actions">
+      <button type="button" id="cert-edit-btn" class="buy-button buy-button--outline">Edit</button>
+      <button type="button" id="cert-send-btn" class="buy-button">Send Certificate</button>
+    </div>
+  </section>
+
+  <!-- Step 3: Success -->
+  <section id="cert-success-section" hidden>
+    <p class="cert-success-msg">Your certificate is on its way — check your email.</p>
+  </section>
+</div>
+
+<style>
+.cert-page p { max-width: 640px; }
+
+.cert-form {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 520px;
+}
+
+.cert-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.cert-field label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.cert-required { color: var(--accent); }
+.cert-optional { color: var(--muted); font-weight: 400; text-transform: none; letter-spacing: 0; }
+
+.cert-field input {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.65rem 0.85rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  color: var(--text);
+  width: 100%;
+  transition: border-color 0.15s;
+}
+
+.cert-field input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.cert-field input::placeholder { color: var(--muted); }
+
+.cert-error {
+  color: #b91c1c;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.cert-preview-img-wrap {
+  margin: 2rem 0 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  max-width: 760px;
+  background: var(--surface);
+}
+
+.cert-preview-img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.cert-preview-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.buy-button--outline {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.buy-button--outline:hover {
+  background: var(--bg);
+  border-color: var(--text);
+}
+
+.cert-success-msg {
+  margin-top: 2rem;
+  font-size: 1.1rem;
+  color: var(--text);
+}
+</style>
+
+<script>
+(function () {
+  var formSection    = document.getElementById('cert-form-section');
+  var previewSection = document.getElementById('cert-preview-section');
+  var successSection = document.getElementById('cert-success-section');
+  var form           = document.getElementById('cert-form');
+  var nameInput      = document.getElementById('cert-name');
+  var emailInput     = document.getElementById('cert-email');
+  var achievementInput = document.getElementById('cert-achievement');
+  var previewImg     = document.getElementById('cert-preview-img');
+  var editBtn        = document.getElementById('cert-edit-btn');
+  var sendBtn        = document.getElementById('cert-send-btn');
+  var formError      = document.getElementById('cert-form-error');
+  var previewError   = document.getElementById('cert-preview-error');
+
+  function showSection(section) {
+    formSection.hidden    = section !== 'form';
+    previewSection.hidden = section !== 'preview';
+    successSection.hidden = section !== 'success';
+  }
+
+  function showFormError(msg) {
+    formError.textContent = msg;
+    formError.hidden = false;
+  }
+
+  function showPreviewError(msg) {
+    previewError.textContent = msg;
+    previewError.hidden = false;
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    formError.hidden = true;
+
+    var name = nameInput.value.trim();
+    var email = emailInput.value.trim();
+    var achievement = achievementInput.value.trim();
+
+    if (!name) { showFormError('Please enter the recipient\'s name.'); nameInput.focus(); return; }
+    if (!email) { showFormError('Please enter the recipient\'s email.'); emailInput.focus(); return; }
+
+    var params = new URLSearchParams({ name: name });
+    if (achievement) params.set('achievement', achievement);
+
+    var imgUrl = '/parchment/render?' + params.toString();
+
+    previewImg.onload = function () { showSection('preview'); };
+    previewImg.onerror = function () { showFormError('Could not load certificate preview. Please try again.'); };
+    previewImg.src = imgUrl;
+  });
+
+  editBtn.addEventListener('click', function () {
+    previewError.hidden = true;
+    showSection('form');
+  });
+
+  sendBtn.addEventListener('click', function () {
+    previewError.hidden = true;
+    sendBtn.disabled = true;
+    sendBtn.textContent = 'Sending…';
+
+    var name = nameInput.value.trim();
+    var email = emailInput.value.trim();
+    var achievement = achievementInput.value.trim();
+
+    var body = new URLSearchParams({ name: name, email: email });
+    if (achievement) body.set('achievement', achievement);
+
+    fetch('/parchment/issue', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: body.toString()
+    })
+    .then(function (resp) {
+      if (resp.ok) {
+        showSection('success');
+      } else {
+        return resp.text().then(function (t) {
+          throw new Error(t || ('Error ' + resp.status));
+        });
+      }
+    })
+    .catch(function (err) {
+      showPreviewError('Something went wrong: ' + err.message + '. Please try again.');
+      sendBtn.disabled = false;
+      sendBtn.textContent = 'Send Certificate';
+    });
+  });
+})();
+</script>
