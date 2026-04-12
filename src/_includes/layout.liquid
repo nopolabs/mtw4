@@ -55,6 +55,7 @@
       </div>
       <p class="cart-shipping-note">Shipping calculated at checkout</p>
       <button class="checkout-btn" id="cart-checkout">Checkout</button>
+      <button class="cart-clear-btn" id="cart-clear">Clear cart</button>
     </div>
   </div>
 
@@ -182,12 +183,13 @@
       document.getElementById('cart-close')?.addEventListener('click', () => Cart.close());
       document.getElementById('cart-overlay')?.addEventListener('click', () => Cart.close());
       document.getElementById('cart-checkout')?.addEventListener('click', () => Cart.checkout());
+      document.getElementById('cart-clear')?.addEventListener('click', () => Cart.clear());
 
       document.addEventListener('keydown', e => {
         if (e.key === 'Escape') Cart.close();
       });
 
-      document.querySelectorAll('.buy-button').forEach(btn => {
+      document.querySelectorAll('.buy-button[data-slug]').forEach(btn => {
         btn.addEventListener('click', () => {
           Cart.add(btn.dataset.slug, btn.dataset.name, btn.dataset.price, btn.dataset.image);
         });

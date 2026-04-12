@@ -438,6 +438,23 @@ body.cart-open .cart-drawer {
   cursor: not-allowed;
 }
 
+.cart-clear-btn {
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-align: center;
+  transition: color 0.2s;
+}
+
+.cart-clear-btn:hover {
+  color: #b91c1c;
+}
+
 /* ── Interior pages ─────────────────────────────────────── */
 .page-content h1 {
   font-family: 'Cormorant Garamond', serif;
