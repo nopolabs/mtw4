@@ -42,7 +42,7 @@ layout: layout.liquid
 
   <!-- Step 3: Success -->
   <section id="cert-success-section" hidden>
-    <p class="cert-success-msg">Your certificate is on its way — check your email.</p>
+    <p class="cert-success-msg" id="cert-success-msg"></p>
   </section>
 </div>
 
@@ -152,6 +152,7 @@ layout: layout.liquid
   var sendBtn        = document.getElementById('cert-send-btn');
   var formError      = document.getElementById('cert-form-error');
   var previewError   = document.getElementById('cert-preview-error');
+  var successMsg     = document.getElementById('cert-success-msg');
 
   function showSection(section) {
     formSection.hidden    = section !== 'form';
@@ -214,6 +215,7 @@ layout: layout.liquid
     })
     .then(function (resp) {
       if (resp.ok) {
+        successMsg.textContent = 'A Master Time Waster certificate is on its way to ' + email;
         showSection('success');
       } else {
         return resp.text().then(function (t) {
