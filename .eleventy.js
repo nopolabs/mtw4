@@ -4,6 +4,9 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy("src/styles.css");
   eleventyConfig.addPassthroughCopy("src/posts/images");
   eleventyConfig.addPassthroughCopy("src/assets");
+  eleventyConfig.addPassthroughCopy("src/favicon.ico");
+  eleventyConfig.addPassthroughCopy("src/favicon-*.png");
+  eleventyConfig.addPassthroughCopy("src/apple-touch-icon.png");
 
   // Date filters for posts
   eleventyConfig.addFilter("readableDate", (date) => {
