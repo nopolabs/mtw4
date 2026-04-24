@@ -21,7 +21,7 @@ export async function onRequest(context: {
     const token = formData.get('cf-turnstile-response') ?? '';
 
     const verifyRes = await fetch(
-      'https://challenges.cloudflare.com/turnstile/v1/siteverify',
+      'https://challenges.cloudflare.com/turnstile/v0/siteverify',
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
