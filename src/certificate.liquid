@@ -24,6 +24,7 @@ layout: layout.liquid
           placeholder="In recognition of spectacular, world-class, unapologetic wasting of time">
       </div>
       <p id="cert-form-error" class="cert-error" hidden></p>
+      <div class="cf-turnstile" data-sitekey="0x4AAAAAADCnX6lgNq7_Lfj5" data-theme="light" data-callback="onTurnstileSuccess"></div>
       <button type="submit" class="buy-button">Preview Certificate</button>
     </form>
   </section>
@@ -36,7 +37,7 @@ layout: layout.liquid
     <p id="cert-preview-error" class="cert-error" hidden></p>
     <div class="cert-preview-actions">
       <button type="button" id="cert-edit-btn" class="buy-button buy-button--outline">Edit</button>
-      <button type="button" id="cert-send-btn" class="buy-button">Send Certificate</button>
+      <button type="button" id="cert-send-btn" class="buy-button" disabled>Send Certificate</button>
     </div>
   </section>
 
@@ -139,6 +140,8 @@ layout: layout.liquid
 }
 </style>
 
+<script src="https://challenges.cloudflare.com/turnstile/v1/api.js" async defer></script>
+
 <script>
 (function () {
   var formSection    = document.getElementById('cert-form-section');
@@ -155,6 +158,10 @@ layout: layout.liquid
   var previewError   = document.getElementById('cert-preview-error');
   var successMsg     = document.getElementById('cert-success-msg');
   var anotherBtn     = document.getElementById('cert-another-btn');
+
+  window.onTurnstileSuccess = function () {
+    sendBtn.disabled = false;
+  };
 
   function showSection(section) {
     formSection.hidden    = section !== 'form';
@@ -201,8 +208,9 @@ layout: layout.liquid
   anotherBtn.addEventListener('click', function () {
     form.reset();
     formError.hidden = true;
-    sendBtn.disabled = false;
+    sendBtn.disabled = true;
     sendBtn.textContent = 'Send Certificate';
+    turnstile.reset();
     showSection('form');
   });
 
@@ -217,6 +225,7 @@ layout: layout.liquid
 
     var body = new URLSearchParams({ name: name, email: email });
     if (achievement) body.set('achievement', achievement);
+    body.set('cf-turnstile-response', turnstile.getResponse());
 
     fetch('/parchment/issue', {
       method: 'POST',
