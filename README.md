@@ -12,6 +12,8 @@ A static ecommerce site built with Eleventy and deployed to Cloudflare Pages, us
 - **Backend:** Cloudflare Worker
 - **Idempotency:** Cloudflare KV
 - **Fulfillment:** Printful API (Manual Order / API store)
+- **Certificate rendering & delivery:** [parchment](https://github.com/nopolabs/parchment) Cloudflare Worker
+- **Bot protection:** Cloudflare Turnstile (managed challenge widget)
 - **Source control:** GitHub (nopolabs/mtw4)
 
 ## Monthly cost
@@ -46,6 +48,9 @@ mtw4/
 │   ├── wrangler.json         # Worker configuration
 │   ├── .dev.vars             # Local secrets (never commit — in .gitignore)
 │   └── package.json
+├── functions/
+│   └── parchment/
+│       └── [[path]].ts       # Catch-all Pages Function: Turnstile guard + parchment proxy
 ├── .eleventy.js              # Eleventy config (input: src/, output: _site/)
 ├── package.json
 └── .gitignore
@@ -63,6 +68,37 @@ mtw4/
 8. Worker creates a Printful order via the Printful API
 9. Worker confirms the Printful order (moves from `draft` to `pending` → fulfillment begins)
 10. Customer is redirected to `/success`
+
+## Certificate feature
+
+The `/certificate` page lets anyone issue a Master Time Waster certificate to a recipient:
+
+1. Visitor fills in name, achievement (optional), and recipient email
+2. **Preview Certificate** fetches `GET /parchment/render?name=...` → proxied to parchment → returns a certificate PNG
+3. Visitor completes the Cloudflare Turnstile challenge (unlocks the **Send Certificate** button)
+4. **Send Certificate** posts `POST /parchment/issue` with the Turnstile token
+5. The `functions/parchment/[[path]].ts` Pages Function intercepts the POST:
+   - Verifies the Turnstile token with Cloudflare's `v0/siteverify` API
+   - On success, forwards the request to the parchment worker with an API key in the `Authorization` header
+6. Parchment renders the certificate and emails it to the recipient via Resend
+
+### Pages Function secrets
+
+Set these once in Cloudflare (not in source):
+
+```bash
+npx wrangler pages secret put PARCHMENT_BASE_URL --project-name mtw4
+npx wrangler pages secret put PARCHMENT_API_KEY --project-name mtw4
+npx wrangler pages secret put TURNSTILE_SECRET_KEY --project-name mtw4
+```
+
+| Secret | Value |
+|---|---|
+| `PARCHMENT_BASE_URL` | `https://parchment-worker-mtw.danrevel.workers.dev` |
+| `PARCHMENT_API_KEY` | MTW_KEY (must match `ISSUE_API_KEY` on parchment-worker-mtw) |
+| `TURNSTILE_SECRET_KEY` | From Cloudflare Turnstile dashboard for site key `0x4AAAAAADCnX6lgNq7_Lfj5` |
+
+The Turnstile site key `0x4AAAAAADCnX6lgNq7_Lfj5` is configured for `mastertimewaster.com` in the [Cloudflare Turnstile dashboard](https://dash.cloudflare.com/?to=/:account/turnstile).
 
 ## Local development
 
