@@ -15,7 +15,6 @@ export async function onRequest(context: {
   const isIssue = path === 'issue' && request.method === 'POST';
 
   if (isIssue) {
-    // Buffer body to read Turnstile token, then forward the same bytes.
     const bodyText = await request.text();
     const formData = new URLSearchParams(bodyText);
     const token = formData.get('cf-turnstile-response') ?? '';
@@ -40,21 +39,23 @@ export async function onRequest(context: {
       });
     }
 
-    // Forward full body — parchment ignores the cf-turnstile-response field.
     return fetch(targetUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Authorization': `Bearer ${env.PARCHMENT_API_KEY}`,
+        'X-Site-ID': 'mtw',
       },
       body: bodyText,
     });
   }
 
-  // All other paths: transparent proxy.
   return fetch(targetUrl, {
     method: request.method,
-    headers: request.headers,
+    headers: {
+      ...Object.fromEntries(request.headers),
+      'X-Site-ID': 'mtw',
+    },
     body: request.body,
   });
 }
