@@ -11,7 +11,8 @@ export async function onRequest(context: {
 }): Promise<Response> {
   const { request, env, params } = context;
   const path = Array.isArray(params.path) ? params.path.join('/') : (params.path ?? '');
-  const targetUrl = `${env.PARCHMENT_BASE_URL}/parchment/${path}`;
+  const { search } = new URL(request.url);
+  const targetUrl = `${env.PARCHMENT_BASE_URL}/parchment/${path}${search}`;
   const isIssue = path === 'issue' && request.method === 'POST';
 
   if (isIssue) {
