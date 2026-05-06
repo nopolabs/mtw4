@@ -4,7 +4,10 @@ layout: layout.liquid
 ---
 
 <div class="page-content cert-page">
-  <h1>Issue a Certificate</h1>
+  <div class="cert-title-row">
+    <h1>Issue a Certificate</h1>
+    <img src="/assets/mtw-seal.png" alt="Master Time Waster seal" class="cert-seal">
+  </div>
   <p>Recognize a true master. Fill in the details below, preview the certificate, then send it directly to their inbox.</p>
 
   <!-- Step 1: Form -->
@@ -50,6 +53,8 @@ layout: layout.liquid
 
 <style>
 .cert-page p { max-width: 640px; }
+.cert-title-row { display: flex; align-items: center; gap: 1rem; }
+.cert-seal { height: 80px; width: auto; }
 
 .cert-form {
   margin-top: 2rem;
