@@ -5,3 +5,7 @@ worker/.dev.vars
 .claude/
 .scratch/
 .worktrees/
+.wrangler/
+
+# Secrets source of truth (push via scripts/push-secrets.sh)
+.env
