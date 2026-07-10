@@ -10,11 +10,6 @@ const PRODUCTS = {
 		name: 'Retired',
 		price: 2700,
 		printful_variant_id: 5214014982,
-	},
-	'weekend-warrior-cap': {
-		name: 'Weekend Warrior',
-		price: 2700,
-		printful_variant_id: 5214014984,
 	}
 };
 
